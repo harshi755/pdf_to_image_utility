@@ -46,7 +46,7 @@ if uploaded_zip:
                                 try:
                                     doc = fitz.open(pdf_path)
                                     for i, page in enumerate(doc):
-                                        pix = page.get_pixmap(dpi=300)  # Control resolution
+                                        pix = page.get_pixmap(dpi=dpi)  # Control resolution
                                         base = os.path.splitext(file)[0]
                                         img_name = f"{base}_page_{i + 1}.png"
                                         img_path = os.path.join(output_folder, img_name)
