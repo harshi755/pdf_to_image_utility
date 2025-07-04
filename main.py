@@ -10,6 +10,12 @@ st.set_page_config(page_title=" PDF to Images Converter", layout="wide")
 st.title(" Upload ZIP of PDFs ➜ Get ZIP of Images")
 
 uploaded_zip = st.file_uploader("Upload a ZIP file containing PDFs", type=["zip"])
+dpi = st.radio(
+    "📐 Select DPI (Use 300 for OCR applications)",
+    options=[150, 200, 300],
+    index=0,
+    help="Higher DPI = better quality but slower and larger images"
+)
 
 if uploaded_zip:
     if st.button("🚀 Convert PDFs"):
@@ -40,7 +46,7 @@ if uploaded_zip:
                                 try:
                                     doc = fitz.open(pdf_path)
                                     for i, page in enumerate(doc):
-                                        pix = page.get_pixmap(dpi=150)  # Control resolution
+                                        pix = page.get_pixmap(dpi=300)  # Control resolution
                                         base = os.path.splitext(file)[0]
                                         img_name = f"{base}_page_{i + 1}.png"
                                         img_path = os.path.join(output_folder, img_name)
