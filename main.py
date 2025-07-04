@@ -4,6 +4,7 @@ import tempfile
 import zipfile
 from pdf2image import convert_from_path
 from PIL import Image
+import fitz
 
 st.set_page_config(page_title=" PDF to Images Converter", layout="wide")
 st.title(" Upload ZIP of PDFs ➜ Get ZIP of Images")
@@ -27,6 +28,7 @@ if uploaded_zip:
                 image_folder = os.path.join(tmp_dir, "images")
                 os.makedirs(image_folder, exist_ok=True)
 
+
                 def convert_pdfs(pdf_folder, output_folder):
                     pdf_count = 0
                     img_count = 0
@@ -36,15 +38,19 @@ if uploaded_zip:
                                 pdf_count += 1
                                 pdf_path = os.path.join(root, file)
                                 try:
-                                    images = convert_from_path(pdf_path)
-                                    for i, img in enumerate(images):
+                                    doc = fitz.open(pdf_path)
+                                    for i, page in enumerate(doc):
+                                        pix = page.get_pixmap(dpi=150)  # Control resolution
                                         base = os.path.splitext(file)[0]
-                                        img_name = f"{base}_page_{i+1}.png"
-                                        img.save(os.path.join(output_folder, img_name), "PNG")
+                                        img_name = f"{base}_page_{i + 1}.png"
+                                        img_path = os.path.join(output_folder, img_name)
+                                        pix.save(img_path)
                                         img_count += 1
+                                    doc.close()
                                 except Exception as e:
                                     st.error(f"❌ Failed to convert {file}: {e}")
                     return pdf_count, img_count
+
 
                 pdfs, imgs = convert_pdfs(extract_path, image_folder)
 
