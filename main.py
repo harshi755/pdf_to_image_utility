@@ -24,11 +24,9 @@ if uploaded_zip:
                 with zipfile.ZipFile(zip_path, "r") as zip_ref:
                     zip_ref.extractall(extract_path)
 
-                # Output folder for images
                 image_folder = os.path.join(tmp_dir, "images")
                 os.makedirs(image_folder, exist_ok=True)
 
-                # Convert PDFs to images
                 def convert_pdfs(pdf_folder, output_folder):
                     pdf_count = 0
                     img_count = 0
@@ -50,7 +48,6 @@ if uploaded_zip:
 
                 pdfs, imgs = convert_pdfs(extract_path, image_folder)
 
-                # Zip images
                 result_zip_path = os.path.join(tmp_dir, "converted_images.zip")
                 with zipfile.ZipFile(result_zip_path, "w", zipfile.ZIP_DEFLATED) as zipf:
                     for root, _, files in os.walk(image_folder):
